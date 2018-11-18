@@ -63,6 +63,7 @@ def findMaxDistValues(connection, table, attrs):
 def anonymizeTable(connection, table, attr, anonLevel):
         print('Anonymizing: %s with anon. Lvl: %d' % (attr, anonLevel))
         query = anonQuery % (table, attr, attr, anonLevel, attr, attr, attr, anonLevel-1, attr, attr, anonLevel-1, attr)
+        # print(query)
         connection.execute(query)
 
 def getClusters(connection, table, qi, sd):
@@ -72,7 +73,7 @@ def main():
         kValues = [3]
         dbName = 'database.db'
         #tables = ['10000', '50000', '100000']
-        tables = ['10000']
+        tables = ['100000']
         qi = ['age', 'city_birth', 'zip_code']
         sd = ['disease']
        
