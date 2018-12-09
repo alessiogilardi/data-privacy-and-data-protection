@@ -1,16 +1,31 @@
-import sqlalchemy as sa
 import pandas as pd
+from pandas import read_csv
 
-def main():
-    kValues = [3]
-    dbName = 'database.db'
-    tableNames = ['10000', '50000', '100000']
-    qi = ['age', 'city_birth', 'zip_code']
-    sd = ['disease']
+ds = read_csv('./databases/db_10000.csv')
 
-    tables = [pd.read_csv('db_' + tName, chunksize=100000) for tName in tableNames]
+def indexOfMax(l): # l -> list of objects
+        return l.index(max(l))
 
-    con = sa.create_engine('sqlite:///%s' % (dbName))
+def findMaxDistValues(attrs):
+        return attrs[indexOfMax([ds.groupby([attr]).size().shape[0] for attr in attrs])]
 
-if __name__ == '__main__':
-        main()
+def testKAnon(k):
+        k_anon = ds.groupby(qi).size()
+        k_anon = k_anon.to_frame('freq').reset_index()
+        k_anon = k_anon.agg({'freq': ['min']})
+        k_anon = k_anon.values[0,0]
+        return k_anon >= k
+
+id = 'id'
+age = 'age'
+city_birth = 'city_birth'
+zip_code = 'zip_code'
+disease = 'disease'
+
+ei = [id]
+qi = [age, city_birth, zip_code]
+sd = [disease]
+
+k = 15
+
+print('K anon:\n %s' % testKAnon(k))
